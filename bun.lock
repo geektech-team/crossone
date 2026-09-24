@@ -1,0 +1,16 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "crossone",
+    },
+    "packages/docs": {
+      "name": "@crossone/docs",
+      "version": "0.0.0",
+    },
+  },
+  "packages": {
+    "@crossone/docs": ["@crossone/docs@workspace:packages/docs"],
+  }
+}
