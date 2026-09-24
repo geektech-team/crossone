@@ -33,6 +33,7 @@ test("template paths cannot escape a destination", () => {
 test("generated workspace and packages declare their boundaries", () => {
   const root = JSON.parse(contentFor("package.json")) as {
     workspaces: string[];
+    scripts: Record<string, string>;
   };
   expect(root.workspaces).toEqual([
     "apps/*",
@@ -40,6 +41,9 @@ test("generated workspace and packages declare their boundaries", () => {
     "packages/*",
     "tooling/*",
   ]);
+  expect(root.scripts.dev).toBe(
+    "bun --filter @crossone-app/admin-web --filter @crossone-app/client-web --filter @crossone-app/api run dev",
+  );
 
   const admin = JSON.parse(contentFor("apps/admin-web/package.json")) as {
     dependencies: Record<string, string>;

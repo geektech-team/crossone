@@ -24,7 +24,7 @@ export function getDefaultTemplate(): readonly TemplateFile[] {
         packageManager: "bun@1.3.0",
         workspaces: ["apps/*", "services/*", "packages/*", "tooling/*"],
         scripts: {
-          dev: "bun --filter '*' run dev",
+          dev: "bun --filter @crossone-app/admin-web --filter @crossone-app/client-web --filter @crossone-app/api run dev",
           typecheck: "bun --filter '*' run typecheck",
           test: "bun --filter '*' run test",
         },
