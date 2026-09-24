@@ -1,0 +1,12 @@
+{
+  "name": "@crossone/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "crossone": "./src/index.ts"
+  },
+  "dependencies": {
+    "@crossone/template-default": "workspace:*"
+  }
+}

@@ -9,6 +9,16 @@
         "typescript": "^5.9.3",
       },
     },
+    "packages/cli": {
+      "name": "@crossone/cli",
+      "version": "0.0.0",
+      "bin": {
+        "crossone": "./src/index.ts",
+      },
+      "dependencies": {
+        "@crossone/template-default": "workspace:*",
+      },
+    },
     "packages/docs": {
       "name": "@crossone/docs",
       "version": "0.0.0",
@@ -19,6 +29,8 @@
     },
   },
   "packages": {
+    "@crossone/cli": ["@crossone/cli@workspace:packages/cli"],
+
     "@crossone/docs": ["@crossone/docs@workspace:packages/docs"],
 
     "@crossone/template-default": ["@crossone/template-default@workspace:packages/template-default"],
