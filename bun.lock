@@ -28,9 +28,16 @@
       "name": "@crossone/requirement",
       "version": "0.0.0",
     },
+    "packages/skill-requirement": {
+      "name": "@crossone/skill-requirement",
+      "version": "0.0.0",
+    },
     "packages/template-default": {
       "name": "@crossone/template-default",
       "version": "0.0.0",
+      "dependencies": {
+        "@crossone/skill-requirement": "workspace:*",
+      },
     },
   },
   "packages": {
@@ -39,6 +46,8 @@
     "@crossone/docs": ["@crossone/docs@workspace:packages/docs"],
 
     "@crossone/requirement": ["@crossone/requirement@workspace:packages/requirement"],
+
+    "@crossone/skill-requirement": ["@crossone/skill-requirement@workspace:packages/skill-requirement"],
 
     "@crossone/template-default": ["@crossone/template-default@workspace:packages/template-default"],
 

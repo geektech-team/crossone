@@ -1,3 +1,5 @@
+import { requirementSkillFiles } from "@crossone/skill-requirement";
+
 export type TemplateFile = Readonly<{ path: string; content: string }>;
 
 const json = (value: unknown): string => `${JSON.stringify(value, null, 2)}\n`;
@@ -169,10 +171,11 @@ export function getDefaultTemplate(): readonly TemplateFile[] {
     {
       path: "AGENTS.md",
       content:
-        "# crossone-app contributor rules\n\n- Keep API contracts transport-safe.\n- Clients must never import service implementation.\n- Keep BackOne request context, database access, and secrets server-only.\n- Treat Web as the stable target; mini-program and native support are future work.\n",
+        "# crossone-app contributor rules\n\n- Keep API contracts transport-safe.\n- Clients must never import service implementation.\n- Keep BackOne request context, database access, and secrets server-only.\n- Treat Web as the stable target; mini-program and native support are future work.\n- For requirement planning, read [.agents/skills/crossone-requirement/SKILL.md](.agents/skills/crossone-requirement/SKILL.md).\n- Planning ends at a user-accepted package marked `planned`; that acceptance is not permission to implement.\n",
     },
   ];
 
+  files.push(...requirementSkillFiles);
   for (const file of files) validateTemplatePath(file.path);
   return files;
 }

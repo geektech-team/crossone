@@ -64,3 +64,12 @@ test("generated workspace and packages declare their boundaries", () => {
   expect(docs).toContain("Web");
   expect(docs).toContain("future");
 });
+
+test("generated app installs the requirement Skill and points contributors to its boundary", () => {
+  const skill = contentFor(".agents/skills/crossone-requirement/SKILL.md");
+  expect(skill).toContain("name: crossone-requirement");
+
+  const agents = contentFor("AGENTS.md");
+  expect(agents).toContain(".agents/skills/crossone-requirement/SKILL.md");
+  expect(agents).toContain("not permission to implement");
+});
