@@ -2,6 +2,7 @@ import { afterEach, expect, test } from "bun:test";
 import { mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { runInit } from "./init";
 import { createRequirement, validateRequirement } from "./requirement";
 
 const roots: string[] = [];
@@ -219,4 +220,60 @@ test("CLI reports validation status, failures, and usage errors", async () => {
   const usage = Bun.spawn([process.execPath, cli, "requirement", "validate"], { cwd: root, stderr: "pipe" });
   expect(await usage.exited).not.toBe(0);
   expect(await new Response(usage.stderr).text()).toContain("Usage: crossone requirement validate <name>");
+});
+
+test("generated app can create, validate, and preserve a user-approved planned package", async () => {
+  const root = await newRoot();
+  const initialized = await runInit("crossone-app", root);
+  expect(initialized.ok).toBe(true);
+  if (!initialized.ok) return;
+
+  const skill = await readFile(join(initialized.target, ".agents/skills/crossone-requirement/SKILL.md"), "utf8");
+  expect(skill).toContain("not permission to implement");
+  expect(await readFile(join(initialized.target, "docs/README.md"), "utf8")).toContain("crossone requirement validate <name>");
+
+  const cli = join(process.cwd(), "packages/cli/src/index.ts");
+  const create = Bun.spawn([process.execPath, cli, "requirement", "create", "Order Management"], {
+    cwd: initialized.target,
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  expect(await create.exited).toBe(0);
+  const directory = join(initialized.target, "docs/requirements/order-management");
+  const initial = JSON.parse(await readFile(join(directory, "status.json"), "utf8"));
+  expect(initial.status).toBe("draft");
+  expect(initial.validationSummary).toBeNull();
+
+  const acceptedDocs: Record<string, string> = {
+    "brief.md": "## Problem\nOrders are hard to track.\n\n## Desired outcome\nTrack orders.\n\n## Scope boundaries\nOrder workflow only.\n",
+    "context.md": "## Project context\nCrossOne application.\n\n## Affected areas\nAPI and admin.\n\n## Assumptions\nPostgres stays in use.\n\n## Open questions\nNone known.\n",
+    "acceptance.md": "## Acceptance criteria\n- [ ] Members can search by order number.\n",
+    "plan.md": "## Implementation steps\n- Add order search.\n\n## Affected files and packages\n- services/api and apps/admin-web.\n\n## Verification\n- Run focused tests.\n\n## Risks\nNone known.\n",
+  };
+  await Promise.all(Object.entries(acceptedDocs).map(([file, content]) => writeFile(join(directory, file), content)));
+
+  const validateDraft = Bun.spawn([process.execPath, cli, "requirement", "validate", "Order Management"], {
+    cwd: initialized.target,
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  expect(await validateDraft.exited).toBe(0);
+  expect(await new Response(validateDraft.stdout).text()).toContain("status: draft");
+
+  const now = new Date().toISOString();
+  await writeFile(join(directory, "status.json"), `${JSON.stringify({
+    ...initial,
+    status: "planned",
+    updatedAt: now,
+    validationSummary: { checkedAt: now, valid: true, issueCount: 0 },
+  }, null, 2)}\n`);
+  const beforeFinalValidation = await readPackage(directory);
+  const validatePlanned = Bun.spawn([process.execPath, cli, "requirement", "validate", "Order Management"], {
+    cwd: initialized.target,
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  expect(await validatePlanned.exited).toBe(0);
+  expect(await new Response(validatePlanned.stdout).text()).toContain("status: planned");
+  expect(await readPackage(directory)).toEqual(beforeFinalValidation);
 });

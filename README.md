@@ -19,4 +19,15 @@ bun install
 bun run dev
 ```
 
-`crossone init` creates a documented project skeleton. It does not install dependencies, initialize Git, create business CRUD modules, parse AI requirements, or enable native-client production support.
+`crossone init` creates a documented project skeleton. It does not install dependencies, initialize Git, or create business CRUD modules.
+
+## AI-assisted requirement planning
+
+From the generated application root, create a requirement draft and validate it with the deterministic local checker:
+
+```bash
+crossone requirement create "Order Management"
+crossone requirement validate "Order Management"
+```
+
+Run these commands from the generated application root with the CrossOne CLI available. CrossOne includes a portable Skill for Codex and compatible AI coding tools. The workflow does not call a model; it ends after the user reviews and accepts a plan marked `planned`. That acceptance does not authorize implementation, which requires a separate request.

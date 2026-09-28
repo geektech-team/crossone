@@ -73,3 +73,15 @@ test("generated app installs the requirement Skill and points contributors to it
   expect(agents).toContain(".agents/skills/crossone-requirement/SKILL.md");
   expect(agents).toContain("not permission to implement");
 });
+
+test("generated docs explain the requirement package lifecycle and commands", () => {
+  const docs = contentFor("docs/README.md");
+  expect(docs).toContain("crossone requirement create <name>");
+  expect(docs).toContain("crossone requirement validate <name>");
+  expect(docs).toContain("brief.md");
+  expect(docs).toContain("status.json");
+  expect(docs).toContain("draft");
+  expect(docs).toContain("planned");
+  expect(docs).toContain("does not call a model");
+  expect(docs).toContain("not permission to implement");
+});
