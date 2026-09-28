@@ -32,12 +32,14 @@ const sectionDefinitions: Readonly<Record<(typeof markdownFiles)[number], readon
   ],
 };
 
-const placeholderOnly = /^(?:\s|[-*\d.)]+|todo\b|tbd\b|fill this\b|describe here\b)+$/i;
-const placeholderWords = /^(?:todo|tbd|fill this(?: in)?|describe here|n\/a)$/i;
+const placeholderLine = /^(?:todo\b|tbd\b|fill this(?: in)?\b|describe here\b|n\/a)(?:\s*[:—-]|\s|$)/i;
 
 function isPlaceholder(value: string): boolean {
-  const normalized = value.trim().replace(/^[-*]\s*/, "");
-  return normalized.length === 0 || placeholderWords.test(normalized) || placeholderOnly.test(normalized);
+  const lines = value
+    .split(/\r?\n/)
+    .map((line) => line.trim().replace(/^(?:[-*+]\s+(?:\[[ xX]\]\s+)?|\d+[.)]\s+)/, ""))
+    .filter(Boolean);
+  return lines.length === 0 || lines.every((line) => placeholderLine.test(line));
 }
 
 function parseStatus(raw: string | undefined, expectedSlug: string, issues: RequirementIssue[]): RequirementStatus | undefined {

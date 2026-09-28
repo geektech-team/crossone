@@ -85,6 +85,16 @@ test("reports missing headings and placeholder-only sections", () => {
   expect(validateRequirementPackage("order-management", docs).issues.some((issue) => issue.message === "Missing required heading: Desired outcome.")).toBe(true);
 });
 
+test("rejects instructional TODO prefixes in requirement prose and checklist items", () => {
+  const docs = validDocuments();
+  docs.brief = "## Problem\nTODO: Describe the user problem.\n\n## Desired outcome\nTBD: Explain the expected outcome.\n\n## Scope boundaries\nDescribe here what is included.\n";
+  docs.acceptance = "## Acceptance criteria\n- [ ] TODO: Add a checkable criterion.\n";
+  const issues = validateRequirementPackage("order-management", docs).issues;
+  expect(issues.some((issue) => issue.file === "brief.md" && issue.message.includes('"Problem"'))).toBe(true);
+  expect(issues.some((issue) => issue.file === "brief.md" && issue.message.includes('"Desired outcome"'))).toBe(true);
+  expect(issues.some((issue) => issue.file === "acceptance.md" && issue.message.includes("checkbox"))).toBe(true);
+});
+
 test("requires a non-placeholder acceptance checkbox and plan verification and impact items", () => {
   const docs = validDocuments();
   docs.acceptance = "## Acceptance criteria\n- [ ] TODO";
