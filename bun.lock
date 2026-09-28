@@ -17,6 +17,7 @@
       },
       "dependencies": {
         "@crossone/requirement": "workspace:*",
+        "@crossone/skill-requirement": "workspace:*",
         "@crossone/template-default": "workspace:*",
       },
     },
