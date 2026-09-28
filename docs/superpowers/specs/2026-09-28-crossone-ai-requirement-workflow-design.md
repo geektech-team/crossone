@@ -70,11 +70,12 @@ The status document uses this versioned shape:
   "slug": "order-management",
   "status": "draft",
   "createdAt": "2026-09-28T00:00:00.000Z",
-  "updatedAt": "2026-09-28T00:00:00.000Z"
+  "updatedAt": "2026-09-28T00:00:00.000Z",
+  "validationSummary": null
 }
 ```
 
-The timestamps are UTC ISO 8601 values. Validation does not require timestamps to remain equal or infer a lifecycle transition from file contents.
+The timestamps are UTC ISO 8601 values. `validationSummary` is initially `null`; after validation, the Skill may store `{ "checkedAt": "<UTC ISO 8601>", "valid": true, "issueCount": 0 }` and update `updatedAt`. This is metadata written by the Skill, not by `crossone requirement validate`; the CLI command remains read-only. Validation does not infer a lifecycle transition from the summary.
 
 ## CLI behavior
 
@@ -107,7 +108,7 @@ The generated `crossone-requirement` Skill guides a compatible AI coding tool to
 4. Inspect only relevant project files and write the project-specific findings and assumptions into `context.md`.
 5. Draft observable acceptance criteria and an implementation plan. Identify dependencies and test strategy without editing business source files.
 6. Run `crossone requirement validate <name>`, resolve validation errors, and show the plan and unresolved decisions to the user.
-7. After the user accepts the plan, update `status.json` to `planned` and rerun validation.
+7. After the user accepts the plan, update `status.json` to `planned`, rerun validation, record its result in `validationSummary` and refresh `updatedAt`, then rerun validation to confirm the final package.
 8. Stop and report the requirement package location. Do not implement the plan in this workflow.
 
 If the user does not accept the plan, leave status as `draft`, record requested changes, and revise the package. The Skill must not mark `planned` merely because documents are populated.
