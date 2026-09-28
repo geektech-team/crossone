@@ -16,11 +16,16 @@
         "crossone": "./src/index.ts",
       },
       "dependencies": {
+        "@crossone/requirement": "workspace:*",
         "@crossone/template-default": "workspace:*",
       },
     },
     "packages/docs": {
       "name": "@crossone/docs",
+      "version": "0.0.0",
+    },
+    "packages/requirement": {
+      "name": "@crossone/requirement",
       "version": "0.0.0",
     },
     "packages/template-default": {
@@ -32,6 +37,8 @@
     "@crossone/cli": ["@crossone/cli@workspace:packages/cli"],
 
     "@crossone/docs": ["@crossone/docs@workspace:packages/docs"],
+
+    "@crossone/requirement": ["@crossone/requirement@workspace:packages/requirement"],
 
     "@crossone/template-default": ["@crossone/template-default@workspace:packages/template-default"],
 

@@ -7,6 +7,7 @@
     "crossone": "./src/index.ts"
   },
   "dependencies": {
+    "@crossone/requirement": "workspace:*",
     "@crossone/template-default": "workspace:*"
   }
 }
