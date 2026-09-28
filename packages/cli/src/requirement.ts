@@ -1,11 +1,23 @@
-import { normalizeRequirementSlug } from "@crossone/requirement";
+import {
+  normalizeRequirementSlug,
+  validateRequirementPackage,
+  type RequirementDocuments,
+  type RequirementIssue,
+  type RequirementStatus,
+} from "@crossone/requirement";
 import { requirementSeedFiles } from "@crossone/skill-requirement";
-import { mkdir, realpath, writeFile } from "node:fs/promises";
+import { mkdir, readFile, realpath, stat, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
 
 export type RequirementCommandResult =
   | Readonly<{ ok: true; slug: string; directory: string }>
   | Readonly<{ ok: false; message: string }>;
+
+export type RequirementValidationCommandResult =
+  | Readonly<{ ok: true; slug: string; status: RequirementStatus }>
+  | Readonly<{ ok: false; message: string; issues?: readonly RequirementIssue[] }>;
+
+const requirementFiles = ["brief.md", "context.md", "acceptance.md", "plan.md", "status.json"] as const;
 
 function isWithin(parent: string, candidate: string): boolean {
   const rel = relative(parent, candidate);
@@ -105,3 +117,97 @@ export async function createRequirement(name: string, cwd: string): Promise<Requ
 }
 
 export const createRequirementUsage = "Usage: crossone requirement create <name>";
+
+export async function validateRequirement(name: string, cwd: string): Promise<RequirementValidationCommandResult> {
+  let slug: string;
+  try {
+    slug = normalizeRequirementSlug(name);
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "Invalid requirement name." };
+  }
+
+  const projectRoot = resolve(cwd);
+  const requirementsRoot = resolve(projectRoot, "docs/requirements");
+  const target = resolve(requirementsRoot, slug);
+  if (!isWithin(projectRoot, requirementsRoot) || !isWithin(requirementsRoot, target) || target === requirementsRoot) {
+    return { ok: false, message: "Requirement path escapes docs/requirements/." };
+  }
+
+  let canonicalProjectRoot: string;
+  try {
+    canonicalProjectRoot = await realpath(projectRoot);
+  } catch {
+    return { ok: false, message: `Unable to resolve project directory: ${projectRoot}` };
+  }
+
+  let canonicalRequirementsRoot: string;
+  try {
+    canonicalRequirementsRoot = await realpath(requirementsRoot);
+  } catch (error) {
+    if (errorCode(error) === "ENOENT") {
+      const result = validateRequirementPackage(slug, {});
+      return { ok: false, message: "Requirement package is incomplete.", issues: result.issues };
+    }
+    return { ok: false, message: "Unable to resolve docs/requirements directory." };
+  }
+  if (!isWithin(canonicalProjectRoot, canonicalRequirementsRoot)) {
+    return { ok: false, message: "Requirements directory resolves outside the project." };
+  }
+
+  let canonicalTarget: string;
+  try {
+    canonicalTarget = await realpath(target);
+  } catch (error) {
+    if (errorCode(error) === "ENOENT") {
+      const result = validateRequirementPackage(slug, {});
+      return { ok: false, message: "Requirement package is incomplete.", issues: result.issues };
+    }
+    return { ok: false, message: `Unable to resolve requirement package: ${target}` };
+  }
+  if (!isWithin(canonicalRequirementsRoot, canonicalTarget) || canonicalTarget === canonicalRequirementsRoot) {
+    return { ok: false, message: "Requirement directory resolves outside docs/requirements/." };
+  }
+
+  const documents: Partial<Record<keyof RequirementDocuments, string>> = {};
+  const pathIssues: RequirementIssue[] = [];
+  for (const file of requirementFiles) {
+    const destination = resolve(canonicalTarget, file);
+    if (!isWithin(canonicalTarget, destination) || destination === canonicalTarget) {
+      pathIssues.push({ file, message: "File path escapes requirement package." });
+      continue;
+    }
+    let canonicalFile: string;
+    try {
+      canonicalFile = await realpath(destination);
+    } catch (error) {
+      if (errorCode(error) === "ENOENT") continue;
+      pathIssues.push({ file, message: "Unable to resolve file path." });
+      continue;
+    }
+    if (!isWithin(canonicalTarget, canonicalFile)) {
+      pathIssues.push({ file, message: "File resolves outside requirement package." });
+      continue;
+    }
+    try {
+      const metadata = await stat(canonicalFile);
+      if (!metadata.isFile()) {
+        pathIssues.push({ file, message: "Must be a regular file." });
+        continue;
+      }
+      const content = await readFile(canonicalFile, "utf8");
+      const key = file === "status.json" ? "status" : file.replace(".md", "") as keyof RequirementDocuments;
+      documents[key] = content;
+    } catch {
+      pathIssues.push({ file, message: "Unable to read file as UTF-8 text." });
+    }
+  }
+
+  const validation = validateRequirementPackage(slug, documents);
+  const issues = [...pathIssues, ...validation.issues];
+  if (!validation.valid || !validation.status) {
+    return { ok: false, message: "Requirement package validation failed.", issues };
+  }
+  return { ok: true, slug, status: validation.status };
+}
+
+export const validateRequirementUsage = "Usage: crossone requirement validate <name>";
