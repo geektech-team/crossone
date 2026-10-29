@@ -1,0 +1,22 @@
+{
+  "name": "@crossone-app/client-mini-bytedance",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "transone": "^0.9.0",
+    "@crossone-app/config": "workspace:*",
+    "@crossone-app/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "transone-cli": "0.10.0",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "test": "bun test --pass-with-no-tests",
+    "dev": "transone dev --target web",
+    "build": "transone build --target miniprogram-bytedance --out-dir dist/mp-bytedance",
+    "build:web": "transone build --target web --out-dir dist/web"
+  }
+}

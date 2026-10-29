@@ -1,5 +1,7 @@
 #!/usr/bin/env bun
 import { runInit, usage } from "./init";
+import { DEFAULT_CLIENTS } from "@crossone/template-default";
+import { parseInitArguments, promptClients } from "./init-options";
 import {
   createRequirement,
   createRequirementUsage,
@@ -10,20 +12,33 @@ import {
 const [command, subcommand, ...args] = process.argv.slice(2);
 
 if (command === "init") {
-  if (args.length > 0) {
-    console.error(usage);
+  const parsed = parseInitArguments([...(subcommand === undefined ? [] : [subcommand]), ...args]);
+  if (!parsed.ok) {
+    console.error(parsed.message);
     process.exitCode = 1;
   } else {
-    const result = await runInit(subcommand, process.cwd());
-    if (!result.ok) {
-      console.error(result.message);
+    try {
+      let clients = parsed.clients;
+      if (clients === undefined) {
+        if (parsed.yes) clients = DEFAULT_CLIENTS;
+        else if (process.stdin.isTTY && process.stdout.isTTY) clients = await promptClients();
+        else throw new Error("Non-interactive init requires --clients <list|all|none> or --yes.");
+      }
+      const result = await runInit(parsed.directory, process.cwd(), { clients });
+      if (!result.ok) {
+        console.error(result.message);
+        process.exitCode = 1;
+      } else {
+        console.log(`Created CrossOne app at ${result.target}`);
+        console.log(`Clients: ${clients.length ? clients.join(", ") : "API only"}`);
+        console.log("Next:");
+        console.log(`  cd ${result.target}`);
+        console.log("  bun install");
+        console.log("  bun run dev");
+      }
+    } catch (error) {
+      console.error(error instanceof Error && error.name === "AbortError" ? "Initialization canceled." : error instanceof Error ? error.message : "Unable to initialize project.");
       process.exitCode = 1;
-    } else {
-      console.log(`Created CrossOne app at ${result.target}`);
-      console.log("Next:");
-      console.log(`  cd ${result.target}`);
-      console.log("  bun install");
-      console.log("  bun run dev");
     }
   }
 } else if (command === "requirement" && subcommand === "create" && args.length === 1) {

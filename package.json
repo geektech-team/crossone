@@ -1,9 +1,10 @@
 {
   "name": "crossone",
-  "private": true,
   "packageManager": "bun@1.3.0",
   "workspaces": ["packages/*"],
   "scripts": {
+    "release": "bun packages/cli/scripts/publish.ts",
+    "release:check": "bun run typecheck && bun test packages",
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit"
   },

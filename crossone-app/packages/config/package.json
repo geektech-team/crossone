@@ -1,0 +1,17 @@
+{
+  "name": "@crossone-app/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "source": "./src/index.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "test": "bun test --pass-with-no-tests",
+    "build": "bun build ./src/index.ts --target browser --outdir dist"
+  }
+}

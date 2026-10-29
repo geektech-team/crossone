@@ -1,4 +1,4 @@
-import { getDefaultTemplate, validateTemplatePath } from "@crossone/template-default";
+import { getDefaultTemplate, validateTemplatePath, type TemplateOptions } from "@crossone/template-default";
 import { mkdir, readdir, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
 
@@ -6,11 +6,12 @@ export type InitResult =
   | Readonly<{ ok: true; target: string }>
   | Readonly<{ ok: false; message: string }>;
 
-const usage = "Usage: crossone init <directory>";
+const usage = "Usage: crossone init <directory> [--clients <list|all|none>] [--yes]";
 
 export async function runInit(
   directory: string | undefined,
   cwd: string,
+  options: TemplateOptions = {},
 ): Promise<InitResult> {
   if (!directory?.trim()) return { ok: false, message: usage };
 
@@ -26,8 +27,8 @@ export async function runInit(
     }
   }
 
-  const files = getDefaultTemplate();
   try {
+    const files = getDefaultTemplate(options);
     for (const file of files) {
       validateTemplatePath(file.path);
       const destination = resolve(target, file.path);

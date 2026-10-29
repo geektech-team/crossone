@@ -1,0 +1,23 @@
+{
+  "name": "@crossone-app/client-web-pc",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "transone": "^0.9.0",
+    "@crossone-app/config": "workspace:*",
+    "@crossone-app/contracts": "workspace:*",
+    "@crossone-app/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "transone-cli": "0.10.0",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "test": "bun test --pass-with-no-tests",
+    "dev": "transone dev --target web-pc",
+    "build": "transone build --target web-pc --out-dir dist/web",
+    "build:web": "transone build --target web-pc --out-dir dist/web"
+  }
+}

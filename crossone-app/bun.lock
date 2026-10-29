@@ -1,0 +1,230 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "crossone-app",
+      "dependencies": {
+        "@geektech/backone": "^0.1.2",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "bun-types": "^1.3.0",
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-app-android": {
+      "name": "@crossone-app/client-app-android",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-app-harmony": {
+      "name": "@crossone-app/client-app-harmony",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-app-ios": {
+      "name": "@crossone-app/client-app-ios",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-mini-alipay": {
+      "name": "@crossone-app/client-mini-alipay",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-mini-bytedance": {
+      "name": "@crossone-app/client-mini-bytedance",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-mini-weixin": {
+      "name": "@crossone-app/client-mini-weixin",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-mini-xiaohongshu": {
+      "name": "@crossone-app/client-mini-xiaohongshu",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-web-pc": {
+      "name": "@crossone-app/client-web-pc",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "@crossone-app/ui": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "apps/client-web-phone": {
+      "name": "@crossone-app/client-web-phone",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "@crossone-app/ui": "workspace:*",
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.10.0",
+        "typescript": "5.9.3",
+      },
+    },
+    "packages/config": {
+      "name": "@crossone-app/config",
+      "version": "0.0.0",
+      "devDependencies": {
+        "typescript": "5.9.3",
+      },
+    },
+    "packages/contracts": {
+      "name": "@crossone-app/contracts",
+      "version": "0.0.0",
+      "devDependencies": {
+        "typescript": "5.9.3",
+      },
+    },
+    "packages/modules": {
+      "name": "@crossone-app/modules",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/contracts": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "5.9.3",
+      },
+    },
+    "packages/ui": {
+      "name": "@crossone-app/ui",
+      "version": "0.0.0",
+      "dependencies": {
+        "transone": "^0.9.0",
+      },
+      "devDependencies": {
+        "typescript": "5.9.3",
+      },
+    },
+    "services/api": {
+      "name": "@crossone-app/api",
+      "version": "0.0.0",
+      "dependencies": {
+        "@crossone-app/config": "workspace:*",
+        "@crossone-app/contracts": "workspace:*",
+        "@crossone-app/modules": "workspace:*",
+        "@geektech/backone": "^0.1.2",
+      },
+      "devDependencies": {
+        "bun-types": "^1.3.0",
+        "typescript": "5.9.3",
+      },
+    },
+  },
+  "packages": {
+    "@crossone-app/api": ["@crossone-app/api@workspace:services/api"],
+
+    "@crossone-app/client-app-android": ["@crossone-app/client-app-android@workspace:apps/client-app-android"],
+
+    "@crossone-app/client-app-harmony": ["@crossone-app/client-app-harmony@workspace:apps/client-app-harmony"],
+
+    "@crossone-app/client-app-ios": ["@crossone-app/client-app-ios@workspace:apps/client-app-ios"],
+
+    "@crossone-app/client-mini-alipay": ["@crossone-app/client-mini-alipay@workspace:apps/client-mini-alipay"],
+
+    "@crossone-app/client-mini-bytedance": ["@crossone-app/client-mini-bytedance@workspace:apps/client-mini-bytedance"],
+
+    "@crossone-app/client-mini-weixin": ["@crossone-app/client-mini-weixin@workspace:apps/client-mini-weixin"],
+
+    "@crossone-app/client-mini-xiaohongshu": ["@crossone-app/client-mini-xiaohongshu@workspace:apps/client-mini-xiaohongshu"],
+
+    "@crossone-app/client-web-pc": ["@crossone-app/client-web-pc@workspace:apps/client-web-pc"],
+
+    "@crossone-app/client-web-phone": ["@crossone-app/client-web-phone@workspace:apps/client-web-phone"],
+
+    "@crossone-app/config": ["@crossone-app/config@workspace:packages/config"],
+
+    "@crossone-app/contracts": ["@crossone-app/contracts@workspace:packages/contracts"],
+
+    "@crossone-app/modules": ["@crossone-app/modules@workspace:packages/modules"],
+
+    "@crossone-app/ui": ["@crossone-app/ui@workspace:packages/ui"],
+
+    "@geektech/backone": ["@geektech/backone@0.1.2", "", {}, "sha512-+8pndiLOgCsLKhIeQgcL51ghsqn2hWKr9gTs7hHsSSehTKH3jboulua6vH6U/e/Hhg0+xVeQtAex7onBEbduNw=="],
+
+    "@types/node": ["@types/node@26.6.6", "", { "dependencies": { "undici-types": "~8.9.0" } }, "sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog=="],
+
+    "bun-types": ["bun-types@1.4.4", "", { "dependencies": { "@types/node": "*", "undici-types": "*" } }, "sha512-yjrJh5oGX7mMPKGd19YXyIjmEuj4G4zNC30bs7PM9Az7NQ3ndF3j6hbeRdvJTRQEhJ/FYQwW0a2moweEi2hMxQ=="],
+
+    "transone": ["transone@0.9.0", "", {}, "sha512-SD39B1AitsEHzejjX9muIZvayUuXUy7+oxjVtplkikQaLlLcS2Yxf6rTgNYjuETVHrCRpoPk0idHEr1qYBdi/A=="],
+
+    "transone-cli": ["transone-cli@0.10.0", "", { "dependencies": { "transone": "0.9.0", "typescript": "^5.3.3" }, "bin": { "transone": "bin/transone.ts" } }, "sha512-m5vn+O5tZ4EyzcrpcaOgXGoPtADmRk8Jg/5FhNaLMhFpcX8cMpz2AvAh+x1qJS2jrMaPPCRWtwqJIxMYxsQnvA=="],
+
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "undici-types": ["undici-types@8.12.3", "", {}, "sha512-EXE4ydL3S76dFb27UFjNVZHTyv/TLdATj/KUe29ptdcg6qXL48J2tZ3126E5kICj5jn781OR+XlVH1N6Mz8jbA=="],
+
+    "@types/node/undici-types": ["undici-types@8.9.0", "", {}, "sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg=="],
+  }
+}
