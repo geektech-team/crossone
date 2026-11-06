@@ -17,6 +17,8 @@
 
 工作区清单中的 `private: true` 和 `0.0.0` 保持不变；只有四个白名单包的发布暂存清单移除 private 并写入发布版本。不要在仓库根目录直接执行 `npm publish`，也不要绕过脚本发布原始工作区。
 
+各包的 `homepage` 指向 [CrossOne 文档站](https://geektech-team.github.io/crossone/) 对应分区。发布脚本会将 `homepage`、`repository`（含子包 directory）及 `bugs` 原样带入暂存清单和 tarball，npm 包页面可据此显示文档、源码与问题反馈链接。文档站通过独立 GitHub Pages workflow 部署，不参与 npm 发布。
+
 仓库目前未声明统一许可证。脚本只继承包已有的 license，不擅自指定许可证；如存在 `LICENSE`、`LICENSE.md` 或 `LICENSE.txt`，会优先复制包内文件，否则复制根目录同名文件。对外发布前请由维护者确认许可信息，并按需要补充相关文件。
 
 ## 环境准备

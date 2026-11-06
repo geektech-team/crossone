@@ -2,6 +2,22 @@
 
 CrossOne is a Bun and TypeScript framework workspace. Its packages provide the CLI, the default project template, and framework documentation.
 
+Documentation: [CrossOne Docs](https://geektech-team.github.io/crossone/) · [Getting started](https://geektech-team.github.io/crossone/guide/getting-started/) · [Package map](https://geektech-team.github.io/crossone/guide/architecture/).
+
+The documentation site lives in `packages/docs`, following TransOne's static multi-page documentation pattern:
+
+```bash
+bun run docs:dev                    # http://localhost:52314
+bun run docs:build                  # static HTML in packages/docs/dist
+bun run docs:preview                # preview the built site
+# Reproduce the GitHub Pages deployment subpath:
+bun run docs:build -- --base=/crossone/
+bun run docs:verify -- --base=/crossone/
+bun run docs:preview
+```
+
+The `Deploy Docs to GitHub Pages` workflow deploys changes on `main` to the `github-pages` environment. See [the docs package](./packages/docs/README.md) for adding pages and configuring Pages.
+
 ## Local development
 
 Framework npm release instructions: [PUBLISH.md](./PUBLISH.md). `bun run release --version 0.1.0 --dry-run` creates local tarballs only.

@@ -1,8 +1,18 @@
 {
   "name": "crossone",
+  "homepage": "https://geektech-team.github.io/crossone/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geektech-team/crossone.git"
+  },
+  "bugs": { "url": "https://github.com/geektech-team/crossone/issues" },
   "packageManager": "bun@1.3.0",
   "workspaces": ["packages/*"],
   "scripts": {
+    "docs:dev": "bun run --cwd packages/docs dev",
+    "docs:build": "bun run --cwd packages/docs build:web",
+    "docs:preview": "bun run --cwd packages/docs preview",
+    "docs:verify": "bun packages/docs/scripts/verify.ts",
     "release": "bun packages/cli/scripts/publish.ts",
     "release:check": "bun run typecheck && bun test packages",
     "test": "bun test",

@@ -3,6 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "homepage": "https://geektech-team.github.io/crossone/template/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geektech-team/crossone.git",
+    "directory": "packages/template-default"
+  },
+  "bugs": { "url": "https://github.com/geektech-team/crossone/issues" },
   "dependencies": {
     "@crossone/skill-requirement": "workspace:*",
     "transone": "^0.10.0"

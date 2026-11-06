@@ -24,6 +24,12 @@
     "packages/docs": {
       "name": "@crossone/docs",
       "version": "0.0.0",
+      "dependencies": {
+        "transone": "^0.10.0",
+      },
+      "devDependencies": {
+        "transone-cli": "0.11.0",
+      },
     },
     "packages/requirement": {
       "name": "@crossone/requirement",
@@ -58,6 +64,8 @@
     "bun-types": ["bun-types@1.4.2", "", { "dependencies": { "@types/node": "*" } }, "sha512-bxV1FgK7yBIzjRe5zBozIM4Bem11ZJcCXSrjWRG3YWLt8yFDePu4cLjpebO8OvPeIE9trbyPF4fuj3Cia4Fj3w=="],
 
     "transone": ["transone@0.10.0", "", {}, "sha512-30DYYrzgnO/k7pFQTxfArVM8KkM+Xe3RBxmhFOfd26srZE5ZMIBx4Xr+SCfcG6VaqIN6WR8jKYX8Li76jcyqiA=="],
+
+    "transone-cli": ["transone-cli@0.11.0", "", { "dependencies": { "transone": "0.10.0", "typescript": "^5.3.3" }, "bin": { "transone": "bin/transone.ts" } }, "sha512-M6N2MTbncb6zVk44DWeDnT7j+kcDJNx/X+fR60rkFgAyJHE4Y887FguvhuCdY3r1b8PZPqd4Ll5ywaf5LW8A/w=="],
 
     "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 

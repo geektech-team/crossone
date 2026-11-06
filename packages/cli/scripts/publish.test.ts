@@ -39,6 +39,11 @@ test("release preview packs only framework packages with installable dependencie
     expect(manifest.version).toBe("0.1.0-test.1");
     expect(manifest.private).not.toBe(true);
     expect(manifest.engines.bun).toBe(">=1.3.0");
+    const sourceManifest = JSON.parse(await readFile(join(repository, "packages", pkg.name.split("/")[1], "package.json"), "utf8"));
+    expect(manifest.homepage).toBe(sourceManifest.homepage);
+    expect(manifest.homepage).toStartWith("https://geektech-team.github.io/crossone/");
+    expect(manifest.repository).toEqual(sourceManifest.repository);
+    expect(manifest.bugs).toEqual(sourceManifest.bugs);
     for (const [name, version] of Object.entries(manifest.dependencies ?? {})) {
       expect(version).not.toMatch(/^workspace:/);
       if (name.startsWith("@crossone/")) expect(version).toBe("0.1.0-test.1");

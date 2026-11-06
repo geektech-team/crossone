@@ -3,5 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "exports": "./src/index.ts"
+  "homepage": "https://geektech-team.github.io/crossone/docs/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geektech-team/crossone.git",
+    "directory": "packages/docs"
+  },
+  "bugs": { "url": "https://github.com/geektech-team/crossone/issues" },
+  "exports": "./src/index.ts",
+  "scripts": {
+    "dev": "transone dev",
+    "build:web": "transone build",
+    "preview": "bun scripts/preview.ts"
+  },
+  "dependencies": { "transone": "^0.10.0" },
+  "devDependencies": { "transone-cli": "0.11.0" }
 }

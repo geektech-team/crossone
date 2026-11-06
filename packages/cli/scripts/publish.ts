@@ -11,6 +11,7 @@ type Options = { version: string; tag: string; publish: boolean };
 type Manifest = {
   name: string; version: string; type?: string; description?: string; license?: string;
   exports?: unknown; bin?: Record<string, string>;
+  homepage?: string; repository?: { type: string; url: string; directory?: string }; bugs?: { url: string };
   dependencies?: Record<string, string>; optionalDependencies?: Record<string, string>; peerDependencies?: Record<string, string>;
 };
 
@@ -105,6 +106,9 @@ async function prepare(options: Options): Promise<string> {
       name: original.name, version: options.version, type: original.type ?? "module",
       description: original.description ?? `CrossOne ${id} package (Bun runtime required)`,
       ...(original.license ? { license: original.license } : {}),
+      ...(original.homepage ? { homepage: original.homepage } : {}),
+      ...(original.repository ? { repository: original.repository } : {}),
+      ...(original.bugs ? { bugs: original.bugs } : {}),
       ...(original.exports ? { exports: original.exports } : {}),
       ...(original.bin ? { bin: original.bin } : {}),
       dependencies: registryDependencies(original.dependencies, options.version),

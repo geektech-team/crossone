@@ -3,6 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "homepage": "https://geektech-team.github.io/crossone/cli/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geektech-team/crossone.git",
+    "directory": "packages/cli"
+  },
+  "bugs": { "url": "https://github.com/geektech-team/crossone/issues" },
   "bin": {
     "crossone": "./src/index.ts"
   },

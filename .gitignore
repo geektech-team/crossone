@@ -1,3 +1,4 @@
 node_modules/
 .superpowers/
 packages/cli/dist/releases/
+packages/docs/dist/
