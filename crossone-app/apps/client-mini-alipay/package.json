@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "transone": "^0.9.0",
+    "transone": "^0.10.0",
     "@crossone-app/config": "workspace:*",
     "@crossone-app/contracts": "workspace:*"
   },
   "devDependencies": {
-    "transone-cli": "0.10.0",
+    "transone-cli": "0.11.0",
     "typescript": "5.9.3"
   },
   "scripts": {

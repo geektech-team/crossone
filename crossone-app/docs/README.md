@@ -22,6 +22,10 @@
 
 Clients may import contracts, modules, and UI, but never API implementation. The API may import contracts and modules. Secrets and server context stay in `services/api`.
 
+## Backend application
+
+The API follows the current object-first BackOne scaffold: project-owned Application → HealthModule → HealthController. `services/api/src/app.ts` owns the server and its initialize/start/stop lifecycle; feature classes live under `services/api/src/modules/health/`. Server types come from `@geektech/backone`, decorators and module registration from `@geektech/backone/decorators`. Standard decorators require Bun >=1.3.10 and legacy decorator flags disabled. The `GET /api/health` transport contract remains unchanged. The installed BackOne CLI is scaffolding tooling, not the application runner.
+
 ## Targets
 
 Only the selected clients are generated. See the root README for their build targets, Web preview commands, and platform validation steps.

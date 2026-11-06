@@ -75,8 +75,8 @@ test("generated workspace and packages declare their boundaries", () => {
   const api = JSON.parse(contentFor("services/api/package.json")) as {
     dependencies: Record<string, string>;
   };
-  expect(phone.dependencies.transone).toBe("^0.9.0");
-  expect(api.dependencies["@geektech/backone"]).toBe("^0.1.2");
+  expect(phone.dependencies.transone).toBe("^0.10.0");
+  expect(api.dependencies["@geektech/backone"]).toBe("^0.4.0");
 
   for (const file of getDefaultTemplate().filter((file) =>
     /^packages\/[^/]+\/package\.json$/.test(file.path),
@@ -106,6 +106,20 @@ test("generated project exposes independent development and production build com
   }
 });
 
+test("API scaffold includes current BackOne CLI tooling and standard decorator configuration", () => {
+  const root = JSON.parse(contentFor("package.json"));
+  const api = JSON.parse(contentFor("services/api/package.json"));
+  expect(root.dependencies["@geektech/backone"]).toBe("^0.4.0");
+  expect(root.devDependencies["@geektech/backone-cli"]).toBe("0.5.0");
+  expect(api.devDependencies["@geektech/backone-cli"]).toBe("0.5.0");
+  expect(root.engines.bun).toBe(">=1.3.10");
+  expect(api.engines.bun).toBe(">=1.3.10");
+  expect(api.scripts.dev).toBe("bun --watch src/index.ts");
+  const tsconfig = JSON.parse(contentFor("services/api/tsconfig.json"));
+  expect(tsconfig.compilerOptions.experimentalDecorators).toBe(false);
+  expect(tsconfig.compilerOptions.emitDecoratorMetadata).toBe(false);
+});
+
 test("every supported client maps to its requested TransOne target", () => {
   const targets = {
     "client-web-phone": "web-mobile",
@@ -122,7 +136,7 @@ test("every supported client maps to its requested TransOne target", () => {
   for (const [id, target] of Object.entries(targets)) {
     const manifest = JSON.parse(files.find((file) => file.path === `apps/${id}/package.json`)!.content);
     expect(manifest.scripts.build).toContain(`--target ${target}`);
-    expect(manifest.devDependencies["transone-cli"]).toBe("0.10.0");
+    expect(manifest.devDependencies["transone-cli"]).toBe("0.11.0");
     const previewTarget = target.startsWith("web-") ? target : "web";
     expect(manifest.scripts.dev).toBe(`transone dev --target ${previewTarget}`);
     expect(manifest.scripts["build:web"]).toBe(`transone build --target ${previewTarget} --out-dir dist/web`);

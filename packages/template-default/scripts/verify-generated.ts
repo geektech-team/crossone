@@ -61,12 +61,17 @@ function start(script: string): RunningCommand {
   return child;
 }
 
-async function stop(child: RunningCommand): Promise<void> {
+async function stop(child: RunningCommand): Promise<boolean> {
+  let forced = false;
   if (child.process.exitCode === null) child.process.kill("SIGTERM");
   await Promise.race([child.process.exited, Bun.sleep(3000)]);
-  if (child.process.exitCode === null) child.process.kill("SIGKILL");
+  if (child.process.exitCode === null) {
+    forced = true;
+    child.process.kill("SIGKILL");
+  }
   await child.process.exited;
   processes.delete(child);
+  return !forced;
 }
 
 async function ready(child: RunningCommand, url: string): Promise<Response> {
@@ -107,6 +112,28 @@ try {
   await command(["install"]);
   await command(["run", "typecheck"]);
   await command(["test"]);
+  await command(["run", "backone:help"]);
+  await command(["run", "--cwd", "services/api", "backone", "--version"]);
+  await command(["--eval", `
+    import { Application } from "./services/api/src/app";
+    const app = new Application({ port: 0, hostname: "127.0.0.1" });
+    try {
+      const starting = app.start();
+      if (app.start() !== starting) throw new Error("Concurrent starts must share one listener");
+      const port = await starting;
+      const response = await fetch("http://127.0.0.1:" + port + "/api/health", { signal: AbortSignal.timeout(2000) });
+      const body = await response.json();
+      if (response.status !== 200 || body.status !== "ok" || body.service !== "api") throw new Error("Invalid module route");
+      await Promise.all([app.stop(), app.stop()]);
+      if (app.server.port !== null) throw new Error("Stopped Application retains its listener");
+      let rejected = false;
+      try { await app.start(); } catch { rejected = true; }
+      if (!rejected) throw new Error("Closed Application restarted");
+    } finally {
+      await app.stop();
+    }
+  `]);
+  console.log("PASS BackOne Application startup, module route, and repeatable shutdown");
 
   // Resolve defaults without --target overrides, so a wrong enum in the generated
   // config cannot be hidden by a correct build script.
@@ -163,8 +190,16 @@ try {
 
   const production = start("start:api");
   await health(production, apiPort);
-  await stop(production);
-  console.log("PASS bundled API start command");
+  if (!await stop(production)) throw new Error("Bundled API required forced shutdown");
+  let listening = false;
+  try {
+    await fetch(`http://127.0.0.1:${apiPort}/api/health`, { signal: AbortSignal.timeout(1000) });
+    listening = true;
+  } catch {
+    // A closed listener is expected after SIGTERM.
+  }
+  if (listening) throw new Error("Bundled API still listens after shutdown");
+  console.log("PASS bundled API start command and graceful shutdown");
 } finally {
   await Promise.all([...processes].map(stop));
   await rm(root, { recursive: true, force: true });

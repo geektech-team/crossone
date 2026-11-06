@@ -2,12 +2,14 @@ import type { TemplateFile } from "./template";
 import { selectedClients, clientPortVariable, type ClientDefinition, type TemplateOptions } from "./clients";
 import { platformSource } from "./platform-source";
 import { Platform } from "transone/platform";
+import { apiSources } from "./api-source";
 
 const json = (value: unknown): string => `${JSON.stringify(value, null, 2)}\n`;
 const typescript = "5.9.3";
-const transone = "^0.9.0";
-const backone = "^0.1.2";
-const transoneCli = "0.10.0";
+const transone = "^0.10.0";
+const backone = "^0.4.0";
+const backoneCli = "0.5.0";
+const transoneCli = "0.11.0";
 const commonScripts = {
   typecheck: "tsc --noEmit --project tsconfig.json",
   test: "bun test --pass-with-no-tests",
@@ -199,11 +201,11 @@ export function getRuntimeTemplate(options: TemplateOptions = {}): TemplateFile[
         name: "crossone-app",
         private: true,
         type: "module",
-        packageManager: "bun@1.3.0",
-        engines: { bun: ">=1.3.0" },
+        packageManager: "bun@1.3.10",
+        engines: { bun: ">=1.3.10" },
         workspaces: ["apps/*", "services/*", "packages/*", "tooling/*"],
         dependencies: { transone, "@geektech/backone": backone },
-        devDependencies: { "transone-cli": transoneCli, typescript, "bun-types": "^1.3.0" },
+        devDependencies: { "transone-cli": transoneCli, "@geektech/backone-cli": backoneCli, typescript, "bun-types": "^1.3.0" },
         scripts: {
           dev: `bun run ${devFilters} dev`,
           ...clientScripts,
@@ -213,6 +215,7 @@ export function getRuntimeTemplate(options: TemplateOptions = {}): TemplateFile[
           "build:packages": "bun run --filter @crossone-app/config --filter @crossone-app/contracts --filter @crossone-app/modules --filter @crossone-app/ui build",
           "build:api": "bun run --cwd services/api build",
           "start:api": "bun run --cwd services/api start",
+          "backone:help": "backone --help",
           typecheck: "tsc --noEmit --project tsconfig.json",
           test: "bun test",
         },
@@ -252,64 +255,27 @@ export function getRuntimeTemplate(options: TemplateOptions = {}): TemplateFile[
           "@crossone-app/contracts": "workspace:*",
           "@crossone-app/modules": "workspace:*",
         },
-        devDependencies: { typescript, "bun-types": "^1.3.0" },
+        devDependencies: { "@geektech/backone-cli": backoneCli, typescript, "bun-types": "^1.3.0" },
+        engines: { bun: ">=1.3.10" },
         scripts: {
           ...commonScripts,
           dev: "bun --watch src/index.ts",
           debug: "bun --inspect --watch src/index.ts",
           build: "bun build ./src/index.ts --target bun --outdir dist",
           start: "NODE_ENV=production bun dist/index.js",
+          "backone:help": "backone --help",
         },
       }),
     },
     {
       path: "services/api/tsconfig.json",
-      content: json({ extends: "../../tsconfig.json", include: ["src/**/*.ts"] }),
+      content: json({
+        extends: "../../tsconfig.json",
+        compilerOptions: { experimentalDecorators: false, emitDecoratorMetadata: false },
+        include: ["src/**/*.ts"],
+      }),
     },
-    {
-      path: "services/api/src/app.ts",
-      content: `import { createServer } from "@geektech/backone";
-import { getHealth } from "@crossone-app/modules";
-
-export function createApi() {
-  const app = createServer({ development: process.env.NODE_ENV !== "production" });
-  app.get("/api/health", (ctx) => ctx.json(getHealth()));
-  return app;
-}
-`,
-    },
-    {
-      path: "services/api/src/index.ts",
-      content: `import { devPorts } from "@crossone-app/config";
-import { createApi } from "./app";
-
-const app = createApi();
-const port = await app.listen({
-  port: Number(process.env.PORT ?? devPorts.api),
-  hostname: process.env.HOST ?? "127.0.0.1",
-});
-console.log("CrossOne API listening on http://" + (process.env.HOST ?? "127.0.0.1") + ":" + port);
-
-async function stop(): Promise<void> {
-  await app.close({ timeout: 1000 });
-  process.exit(0);
-}
-process.once("SIGINT", stop);
-process.once("SIGTERM", stop);
-`,
-    },
-    {
-      path: "services/api/src/app.test.ts",
-      content: `import { expect, test } from "bun:test";
-import { createApi } from "./app";
-
-test("health endpoint returns the shared API contract", async () => {
-  const response = await createApi().handle(new Request("http://localhost/api/health"));
-  expect(response.status).toBe(200);
-  expect(await response.json()).toEqual({ status: "ok", service: "api" });
-});
-`,
-    },
+    ...Object.entries(apiSources).map(([path, content]) => ({ path: `services/api/src/${path}`, content })),
     ...library("contracts"),
     {
       path: "packages/contracts/src/index.ts",

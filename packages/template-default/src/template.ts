@@ -115,7 +115,7 @@ For a small, unambiguous change, state the goal, boundaries, and verification di
     {
       path: "AGENTS.md",
       content:
-        "# crossone-app contributor rules\n\n- Keep API contracts transport-safe.\n- Clients must never import service implementation.\n- Keep BackOne request context, database access, and secrets server-only.\n- See docs/README.md for selected clients; validate mini-program/native output in platform tools.\n- For requirement planning, read [.agents/skills/crossone-requirement/SKILL.md](.agents/skills/crossone-requirement/SKILL.md).\n- Planning ends at a user-accepted package marked `planned`; that acceptance is not permission to implement.\n",
+        "# crossone-app contributor rules\n\n- Keep API contracts transport-safe.\n- Clients must never import service implementation.\n- Keep BackOne request context, database access, and secrets server-only.\n- Group API features under services/api/src/modules/<feature>; the project-owned Application composes modules and owns initialize/start/stop.\n- Import server APIs from @geektech/backone and standard decorators from @geektech/backone/decorators; require Bun >=1.3.10 and keep legacy decorator flags disabled.\n- See docs/README.md for selected clients; validate mini-program/native output in platform tools.\n- For requirement planning, read [.agents/skills/crossone-requirement/SKILL.md](.agents/skills/crossone-requirement/SKILL.md).\n- Planning ends at a user-accepted package marked `planned`; that acceptance is not permission to implement.\n",
     },
   ];
 

@@ -23,9 +23,11 @@ bun run dev
 
 `crossone init` creates a runnable TransOne/BackOne starter with documented workspace dependencies. The command leaves dependency installation to you.
 
+Generated apps require Bun >=1.3.10 and use `@geektech/backone@^0.4.0` with `@geektech/backone-cli@0.5.0` as development tooling. The API follows the current object-first scaffold: project-owned `Application` → `HealthModule` → `HealthController`. Import `BackOneServer` from `@geektech/backone` and `Module`/`Controller`/`Get`/`registerModules` from `@geektech/backone/decorators`. Standard decorators remain enabled by leaving legacy decorator flags off. The CLI only scaffolds projects, so dev/build/start continue to use Bun; `bun run backone:help` displays its supported commands. `GET /api/health` and client proxy behavior remain unchanged.
+
 Interactive initialization displays nine client choices. Enter comma-separated numbers or names, `all` for every client, or `none` for API only; Enter selects mobile Web and PC Web. No administration client is generated.
 
-Generated applications use `transone@^0.9.0` and `transone-cli@0.10.0`. Their configurations select the official `Platform` enum and build scripts pass canonical platform values:
+Generated applications use `transone@^0.10.0` and `transone-cli@0.11.0`. Their configurations select the official `Platform` enum and build scripts pass canonical platform values:
 
 | Client | Platform / build target |
 | --- | --- |

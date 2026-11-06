@@ -2,9 +2,9 @@
   "name": "crossone-app",
   "private": true,
   "type": "module",
-  "packageManager": "bun@1.3.0",
+  "packageManager": "bun@1.3.10",
   "engines": {
-    "bun": ">=1.3.0"
+    "bun": ">=1.3.10"
   },
   "workspaces": [
     "apps/*",
@@ -13,11 +13,12 @@
     "tooling/*"
   ],
   "dependencies": {
-    "transone": "^0.9.0",
-    "@geektech/backone": "^0.1.2"
+    "transone": "^0.10.0",
+    "@geektech/backone": "^0.4.0"
   },
   "devDependencies": {
-    "transone-cli": "0.10.0",
+    "transone-cli": "0.11.0",
+    "@geektech/backone-cli": "0.5.0",
     "typescript": "5.9.3",
     "bun-types": "^1.3.0"
   },
@@ -47,6 +48,7 @@
     "build:packages": "bun run --filter @crossone-app/config --filter @crossone-app/contracts --filter @crossone-app/modules --filter @crossone-app/ui build",
     "build:api": "bun run --cwd services/api build",
     "start:api": "bun run --cwd services/api start",
+    "backone:help": "backone --help",
     "typecheck": "tsc --noEmit --project tsconfig.json",
     "test": "bun test"
   }

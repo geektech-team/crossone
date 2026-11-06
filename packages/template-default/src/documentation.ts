@@ -18,8 +18,14 @@ The selected clients are listed below. \`dev\` starts their Web previews and the
 
 ${clients.length ? "| 客户端 / Client | Platform | 开发预览 / Preview | 构建 / Build | 端口 / Port | 产物 / Output |\n| --- | --- | --- | --- | --- | --- |\n" + rows : "此项目只生成后端 / This project contains the API only."}
 
-前端依赖为 \`transone@^0.9.0\` 和 \`transone-cli@0.10.0\`。各端 \`transone.config.ts\` 用官方 \`Platform\` 枚举指定默认目标；手机 Web 和 PC Web 分别使用 \`web-mobile\`、\`web-pc\`，小程序使用 \`miniprogram-*\`。平台身份与底层生成器分开，产物目录保留 \`dist/web\`、\`dist/mp-*\`、\`dist/app-*\`。
-Frontend dependencies are \`transone@^0.9.0\` and \`transone-cli@0.10.0\`. Each \`transone.config.ts\` selects its default target with the official \`Platform\` enum. Mobile/PC Web use \`web-mobile\`/\`web-pc\`, and mini-programs use \`miniprogram-*\`. Platform identity is separate from the backend generator; output directories remain \`dist/web\`, \`dist/mp-*\`, and \`dist/app-*\`.
+前端依赖为 \`transone@^0.10.0\` 和 \`transone-cli@0.11.0\`。各端 \`transone.config.ts\` 用官方 \`Platform\` 枚举指定默认目标；手机 Web 和 PC Web 分别使用 \`web-mobile\`、\`web-pc\`，小程序使用 \`miniprogram-*\`。平台身份与底层生成器分开，产物目录保留 \`dist/web\`、\`dist/mp-*\`、\`dist/app-*\`。
+Frontend dependencies are \`transone@^0.10.0\` and \`transone-cli@0.11.0\`. Each \`transone.config.ts\` selects its default target with the official \`Platform\` enum. Mobile/PC Web use \`web-mobile\`/\`web-pc\`, and mini-programs use \`miniprogram-*\`. Platform identity is separate from the backend generator; output directories remain \`dist/web\`, \`dist/mp-*\`, and \`dist/app-*\`.
+
+后端依赖为 \`@geektech/backone@^0.4.0\`，开发工具为 \`@geektech/backone-cli@0.5.0\`，应用要求 **Bun >=1.3.10**。\`Application\` 是项目自己的组装与资源所有者，不是框架导出类：它创建 \`BackOneServer\`，通过 \`registerModules\` 注册 \`HealthModule → HealthController\`。服务器从 \`@geektech/backone\` 引用，标准装饰器从 \`@geektech/backone/decorators\` 引用。保持旧版装饰器选项关闭。
+The backend uses \`@geektech/backone@^0.4.0\` with \`@geektech/backone-cli@0.5.0\` as development tooling and requires **Bun >=1.3.10**. The project-owned \`Application\` creates its \`BackOneServer\` and registers \`HealthModule → HealthController\` using \`registerModules\`. Import the server from \`@geektech/backone\` and standard decorators from \`@geektech/backone/decorators\`; do not enable legacy decorator options.
+
+业务后端按 \`services/api/src/modules/<feature>/\` 组织。\`initialize()\` 初始化自有资源而不监听，\`start()\` 初始化后监听，\`stop()\` 等待启动并可重复释放资源。CLI 只生成项目，不提供 dev/build/start；以下命令继续使用 Bun。可运行 \`bun run backone:help\` 查看已安装 CLI 的用法，不要用 CLI 重新初始化并覆盖 CrossOne API。
+Group backend features in \`services/api/src/modules/<feature>/\`. \`initialize()\` prepares resources without listening, \`start()\` initializes and listens, and repeatable \`stop()\` waits for startup and releases owned resources. The BackOne CLI scaffolds projects only; development, build and start commands below continue to use Bun. Run \`bun run backone:help\` for installed CLI help; do not reinitialize the CrossOne API with it.
 
 \`\`\`sh
 bun run dev:api      # http://127.0.0.1:3000/api/health
@@ -59,6 +65,10 @@ ${map}
 ## Boundaries
 
 Clients may import contracts, modules, and UI, but never API implementation. The API may import contracts and modules. Secrets and server context stay in \`services/api\`.
+
+## Backend application
+
+The API follows the current object-first BackOne scaffold: project-owned Application → HealthModule → HealthController. \`services/api/src/app.ts\` owns the server and its initialize/start/stop lifecycle; feature classes live under \`services/api/src/modules/health/\`. Server types come from \`@geektech/backone\`, decorators and module registration from \`@geektech/backone/decorators\`. Standard decorators require Bun >=1.3.10 and legacy decorator flags disabled. The \`GET /api/health\` transport contract remains unchanged. The installed BackOne CLI is scaffolding tooling, not the application runner.
 
 ## Targets
 

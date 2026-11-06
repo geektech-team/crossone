@@ -1,16 +1,24 @@
 import { devPorts } from "@crossone-app/config";
-import { createApi } from "./app";
+import { Application } from "./app";
 
-const app = createApi();
-const port = await app.listen({
+const hostname = process.env.HOST ?? "127.0.0.1";
+const app = new Application({
   port: Number(process.env.PORT ?? devPorts.api),
-  hostname: process.env.HOST ?? "127.0.0.1",
+  hostname,
 });
-console.log("CrossOne API listening on http://" + (process.env.HOST ?? "127.0.0.1") + ":" + port);
+const shutdown = () => {
+  void app.stop().catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+};
+process.once("SIGINT", shutdown);
+process.once("SIGTERM", shutdown);
 
-async function stop(): Promise<void> {
-  await app.close({ timeout: 1000 });
-  process.exit(0);
+try {
+  const port = await app.start();
+  console.log("CrossOne API listening on http://" + hostname + ":" + port);
+} catch (error) {
+  await app.stop();
+  throw error;
 }
-process.once("SIGINT", stop);
-process.once("SIGTERM", stop);
